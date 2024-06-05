@@ -18,8 +18,6 @@ These ports are being used for the following:
 - `SCTP 38412` from the AMF for the NGAP `N2 interface`, used for the control plane connection with the external gNB
 - `UDP 2152` from the MB-UPF for the GTPU `N3mb interface`, used for the data plane connection with the external gNB
 
-TODO: Explain the services being exposed by the containers and how to change the `docker-host.external-ip: 172.33.33.33` in the mb-upf section of the docker-compose.yaml file.
-
 > [!NOTE]
 > Modify the `.env` file present on this repository to change the values being deployed on `docker-compose.yaml`
 
