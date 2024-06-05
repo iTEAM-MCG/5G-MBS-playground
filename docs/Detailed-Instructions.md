@@ -30,4 +30,53 @@ curl --http2-prior-knowledge \
 
 ## Configure the MB-UPF multicast
 
-TODO: Explain all the smcroute mess
+Apart from editing the `.env` for the MB-UPF to be reachable by external gNBs, the MB-UPF needs extra configuration. To be able to forward the multicast traffic to the lower layer source specific multicast (LLSSM) address, the MB-UPF needs to udpate the multicast forwarding cache (MFC) in the linux kernel.
+
+For this purpose, the `smcroute` tool is installed on the MB-UPF container. Through the `smcroutectl` command, the MFC can be updated to the desired values. Currently this is done manually but other ways to update the MFC are being studied.
+
+```bash
+# Execute this command inside the MB-UPF container
+smcroutectl add eth0 <n6mb_multicast_destination_address> ogstun
+```
+
+After this, and after creating the MBS Session, the MVP can be tested by using the AF to send multicast traffic to the MB-UPF and inspecting the MB-UPF output:
+```bash
+# Execute this command inside the AF container
+sendip -p ipv4 -is <af_container_ip> -id <n6mb_multicast_destination_address> <mb_upf_container_ip>
+```
+
+### Full example
+
+Create a Broadcast MBS Session using TMGI as identifier but specifying also the SSM address, this SSM will be the address that the AF will use to send the multicast traffic to the MB-UPF through the N6mb interface.
+
+```bash
+# MBS Session Create request with TMGI allocate: /nmbsmf-mbssession/v1/mbs-sessions with multicast source
+curl --http2-prior-knowledge \
+  --request POST \
+  --header "Content-Type: application/json" \
+  --data '{ "mbsSession": { "ssm": { "sourceIpAddr": { "ipv4Addr": "10.33.33.3" }, "destIpAddr": { "ipv4Addr": "239.0.0.20" } },"tmgiAllocReq": true, "serviceType":"BROADCAST" } }' \
+  mb-smf.open5gs.org:80/nmbsmf-mbssession/v1/mbs-sessions
+```
+
+The AF with IP address 10.33.33.3 will send an IP packet to the multicast destination 239.0.0.20. The MB-UPF will receive the traffic being sent to this multicast group and then forward it to the LLSSM.
+
+For this, we will configure the MB-UPF like this:
+```bash
+# Execute this command inside the MB-UPF container
+smcroutectl add eth0 239.0.0.20 ogstun
+```
+
+This command will update the MFC of the MB-UPF to receive the traffic for the multicast group 239.0.0.20 and forward it internally using the `ogstun` interface.
+
+After all of this is configured, the MB-UPF has been configured through PFCP to forward the traffic received to the LLSSM. The LLSSM is uses the multicast destination address `239.0.0.4` and C-TEID `33`.
+
+Now, sending traffic with the AF to the MB-UPF with the addresses configured causes the MB-UPF to forward the traffic using GTPU to the LLSSM:
+
+> [!TIP]
+> Check AF container IP executing `ip address` from the AF container and use the `eth0` interface address as <af_container_ip>
+
+```bash
+# To send traffic from the AF to the MB-UPF
+sendip -p ipv4 -is <af_container_ip> -id 239.0.0.20 mb-upf.open5gs.org
+```
+

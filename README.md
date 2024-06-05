@@ -23,7 +23,7 @@ TODO: Explain the services being exposed by the containers and how to change the
 > [!NOTE]
 > Modify the `.env` file present on this repository to change the values being deployed on `docker-compose.yaml`
 
-Add your host's IP address to the `DOCKER_HOST_IP` variable in the `.env` file for the MB-UPF to be able to reach Internet.
+Add your host's IP address to the `DOCKER_HOST_IP` variable in the `.env` file for the MB-UPF to be reachable by external gNBs.
 
 ## Basic usage
 
@@ -41,7 +41,7 @@ docker compose down
 
 ## Find more information
 
-- [docs/Overview](docs/Overview.md) to see the current status and features of the project.
-- [docs/Detailed Instructions](docs/Detailed-Instructions.md) to see how to manage the containers.
-- `configs` to check/modify the Network Function configuration files of the deployment.
-- `examples` to see examples of the supported requests to the implemented APIs.
+- [docs/Overview](docs/Overview.md) to see the current status and features of the project
+- [docs/Detailed Instructions](docs/Detailed-Instructions.md) to see how to manage the containers
+- `configs` to check/modify the Network Function configuration files of the deployment
+- `examples` to see examples of the supported requests to the implemented APIs
