@@ -47,7 +47,7 @@ The MVP **currently lacks support** for:
 
 ## 5G-MBS architecture using Open5GS
 
-![5G-MBS architecture using Open5GS](../images/5G-MBS_5G_Core.png)
+![5G-MBS architecture using Open5GS](images/5G-MBS_5G_Core.png)
 
 </details>
 
@@ -55,7 +55,7 @@ The MVP **currently lacks support** for:
 
 ## MBS Session Establishment for Broadcast call flow
 
-![MBS Broadcast Session Create call flow](../images/MBS_Broadcast_Session_Create_call_flow.png)
+![MBS Broadcast Session Create call flow](images/MBS_Broadcast_Session_Create_call_flow.png)
 
 </details>
 

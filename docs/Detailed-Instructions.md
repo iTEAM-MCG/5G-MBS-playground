@@ -79,4 +79,3 @@ Now, sending traffic with the AF to the MB-UPF with the addresses configured cau
 # To send traffic from the AF to the MB-UPF
 sendip -p ipv4 -is <af_container_ip> -id 239.0.0.20 mb-upf.open5gs.org
 ```
-
