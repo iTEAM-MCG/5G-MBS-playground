@@ -1,0 +1,7 @@
+[DEFAULT]
+log_level = "INFO"
+
+[mb_smf]
+address = "mb-smf.open5gs.org"
+protocol = "http"
+port = 80
