@@ -131,7 +131,7 @@ services:
 
   mb-smf:
     container_name: mb-smf
-    image: "ghcr.io/borjis131/mb-smf:${OPEN5GS_VERSION}"
+    image: "mb-smf:${OPEN5GS_VERSION}"
     command: "-c /etc/open5gs/custom/mb-smf.yaml"
     networks:
       open5gs:
@@ -146,7 +146,7 @@ services:
 
   mb-upf:
     container_name: mb-upf
-    image: "ghcr.io/borjis131/mb-upf:${OPEN5GS_VERSION}"
+    image: "mb-upf:${OPEN5GS_VERSION}"
     command: "-c /etc/open5gs/custom/mb-upf.yaml"
     networks:
       open5gs:
@@ -165,7 +165,7 @@ services:
 
   af:
     container_name: af
-    image: "ghcr.io/borjis131/af:${OPEN5GS_VERSION}"
+    image: "af:${OPEN5GS_VERSION}"
     networks:
       open5gs:
         aliases:

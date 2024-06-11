@@ -25,8 +25,8 @@ target "mb-smf" {
   contexts = {
     "base-mbs-open5gs:${OPEN5GS_VERSION}" = "target:base-mbs-open5gs"
   }
-  tags = ["ghcr.io/borjis131/mb-smf:${OPEN5GS_VERSION}"]
-  output = ["type=registry"]
+  tags = ["mb-smf:${OPEN5GS_VERSION}"]
+  output = ["type=image"]
 }
 
 target "mb-upf" {
@@ -34,13 +34,13 @@ target "mb-upf" {
   contexts = {
     "base-mbs-open5gs:${OPEN5GS_VERSION}" = "target:base-mbs-open5gs"
   }
-  tags = ["ghcr.io/borjis131/mb-upf:${OPEN5GS_VERSION}"]
-  output = ["type=registry"]
+  tags = ["mb-upf:${OPEN5GS_VERSION}"]
+  output = ["type=image"]
 }
 
 target "af" {
   context = "."
   dockerfile = "./images/af/Dockerfile"
-  tags = ["ghcr.io/borjis131/af:${OPEN5GS_VERSION}"]
-  output = ["type=registry"]
+  tags = ["af:${OPEN5GS_VERSION}"]
+  output = ["type=image"]
 }
