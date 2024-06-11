@@ -39,7 +39,8 @@ target "mb-upf" {
 }
 
 target "af" {
-  context = "./images/af"
+  context = "."
+  dockerfile = "./images/af/Dockerfile"
   tags = ["ghcr.io/borjis131/af:${OPEN5GS_VERSION}"]
   output = ["type=registry"]
 }

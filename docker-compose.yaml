@@ -170,6 +170,8 @@ services:
       open5gs:
         aliases:
           - af.open5gs.org
+    volumes:
+      - ./test:/test:ro
 
 networks:
   open5gs:
