@@ -1,5 +1,6 @@
 import unittest
 import httpcore
+from urllib.parse import urlencode, quote
 import json
 
 from utils.config import config_from_file
@@ -118,7 +119,7 @@ class TMGIAllocateServiceOperation(unittest.TestCase):
         self.assertEqual(refresh_validation["result"], "success")
 
         # refresh the allocated TMGI
-        # send the tmgi allocate POST request
+        # send the tmgi allocate (refresh) POST request
         response = http2.request("POST", url, headers=headers, content=json.dumps(refresh_json).encode("utf-8"))
 
         logger.debug(f"Sending POST request to {url} with JSON: {refresh_json}")
@@ -156,5 +157,67 @@ class TMGIDeallocateServiceOperation(unittest.TestCase):
 
         # This request is a DELETE with the tmgi-list query parameter following the tmgi_deallocate.schema.json
 
-        response = http2.request("GET", "https://www.google.es")
-        self.assertEqual(response.status, 200)
+        # allocate first a TMGI to be deallocated
+        # load the JSON file
+        with open("support/nmbsmf-tmgi/tmgi_allocate.json") as file:
+            request_json = json.load(file)
+
+        # validate input JSON against a JSON schema
+        input_validation = json_validate(request_json, "support/nmbsmf-tmgi/tmgi_allocate.schema.json")
+
+        logger.debug(f"Input JSON validation {input_validation['result']}: {input_validation['message']}")
+
+        self.assertEqual(input_validation["result"], "success")
+
+        # build the full API URL
+        url = f"{config['mb_smf']['protocol']}://{config['mb_smf']['address']}:{config['mb_smf']['port']}{full_path}"
+
+        # send the tmgi allocate POST request
+        headers = { "Content-Type": "application/json" }
+        response = http2.request("POST", url, headers=headers, content=json.dumps(request_json).encode("utf-8"))
+
+        logger.debug(f"Sending POST request to {url} with JSON: {request_json}")
+
+        response_status = response.status
+        response_json = json.loads(response.content)
+        logger.debug(f"Received response [{response_status}] with JSON: {response_json}")
+
+        # validate received JSON against a JSON schema
+        output_validation = json_validate(response_json, "support/nmbsmf-tmgi/tmgi_allocated.schema.json")
+        logger.debug(f"Output JSON validation {output_validation['result']}: {output_validation['message']}")
+
+        self.assertEqual(output_validation["result"], "success")
+
+        # test asserts
+        self.assertEqual(response_status, 200)
+
+        # load the JSON file
+        with open("support/nmbsmf-tmgi/tmgi_deallocate.template.json") as file:
+            deallocate_json = json.load(file)
+
+        # copy the allocated TMGI to the deallocate JSON
+        deallocate_json[0] = response_json["tmgiList"][0]
+
+        # validate the refresh JSON against a JSON schema
+        deallocate_validation = json_validate(deallocate_json, "support/nmbsmf-tmgi/tmgi_deallocate.schema.json")
+
+        logger.debug(f"Deallocate JSON params validation {deallocate_validation['result']}: {deallocate_validation['message']}")
+
+        self.assertEqual(deallocate_validation["result"], "success")
+
+        # deallocate the previously allocated TMGI
+        # send the tmgi deallocate DELETE request
+        # using quote to use %20 instead of + for spaces
+        # using json.dumps to convert the deallocate_json python dict to a JSON string
+        encoded_params = urlencode({"tmgi-list": json.dumps(deallocate_json) }, quote_via=quote)
+
+        # url with query parameters encoded
+        url_with_params = f"{url}?{encoded_params}"
+        response = http2.request("DELETE", url=url_with_params, headers=headers)
+
+        logger.debug(f"Sending DELETE request to {url_with_params}")
+
+        response_status = response.status
+        logger.debug(f"Received response [{response_status}]")
+
+        self.assertEqual(response.status, 204)

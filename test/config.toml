@@ -1,5 +1,5 @@
 [DEFAULT]
-log_level = "INFO"
+log_level = "DEBUG"
 
 [mb_smf]
 address = "mb-smf.open5gs.org"
