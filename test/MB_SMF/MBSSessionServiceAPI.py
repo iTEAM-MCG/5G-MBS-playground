@@ -21,7 +21,7 @@ class MBSSessionCreateServiceOperation(unittest.TestCase):
 
         logger.info("test_create_mbs_session")
 
-        url = f"{config['example_get']['protocol']}://{config['example_get']['address']}"
+        url = "https://www.google.es"
         response = http2.request("GET", url)
 
         self.assertEqual(response.status, 200)
