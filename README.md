@@ -25,7 +25,23 @@ Add your host's IP address to the `DOCKER_HOST_IP` variable in the `.env` file f
 
 ## Basic usage
 
-To download the Docker images from the repository and start everything:
+<details>
+<summary>Build it</summary>
+
+> Note: This method uses the `docker-bake.hcl` file and requires `docker-buildx-plugin`
+
+From the top level directory of the repository run:
+```bash
+docker buildx bake
+```
+
+This builds the AF, MB-SMF and MB-UPF images locally.
+
+</details>
+
+<details>
+<summary>Deploy it</summary>
+To download the rest of the Docker images from the repository and start everything:
 
 ```bash
 docker compose up -d
@@ -36,6 +52,8 @@ To stop everything:
 ```bash
 docker compose down
 ```
+
+</details>
 
 ## Find more information
 
