@@ -57,7 +57,10 @@ docker compose down
 
 ## Find more information
 
-- [docs/Overview](docs/Overview.md) to see the current status and features of the project
-- [docs/Detailed Instructions](docs/Detailed-Instructions.md) to see how to manage the containers
+- `docs` has extra documentation regarding the project
+  - [docs/Overview](docs/Overview.md) to see the current status and features of the project
+  - [docs/Detailed Instructions](docs/Detailed-Instructions.md) to see how to manage the containers
+  - [docs/Tests](docs/Tests.md) to see how to use the tests present in the `test` directory
 - `configs` to check/modify the Network Function configuration files of the deployment
-- `examples` to see examples of the supported requests to the implemented APIs
+- `images` where the Network Function Dockerfiles are present
+- `test` testing suite being developed in Python to test the features present
